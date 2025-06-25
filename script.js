@@ -1,5 +1,5 @@
-// Анимации при прокрутке
 document.addEventListener('DOMContentLoaded', function() {
+    // Анимации при прокрутке
     const observerOptions = {
         root: null,
         rootMargin: '0px',
@@ -45,4 +45,38 @@ document.addEventListener('DOMContentLoaded', function() {
             nav.classList.remove('scrolled');
         }
     });
+
+    // Инициализация EmailJS
+    emailjs.init("kcE6SQT2NhiXVlDiQ"); // Замените на ваш Public Key
+
+    // Обработка отправки формы
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            console.log('Form submitted'); // Для отладки
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                subject: document.getElementById('subject').value,
+                message: document.getElementById('message').value
+            };
+            console.log('Form data:', formData); // Для отладки
+            emailjs.send("service_h344zrn", "template_198vwfw", { // Замените на ваши Service ID и Template ID
+                from_name: formData.name,
+                from_email: formData.email,
+                subject: formData.subject,
+                message: formData.message,
+                to_email: "baronstocwork@gmail.com"
+            })
+            .then(function(response) {
+                console.log('Email sent:', response); // Для отладки
+                alert('Сообщение успешно отправлено!');
+                contactForm.reset();
+            }, function(error) {
+                console.log('Email error:', error); // Для отладки
+                alert('Ошибка при отправке сообщения: ' + JSON.stringify(error));
+            });
+        });
+    }
 });
