@@ -1,0 +1,292 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сергей (Барон) - Специалист по безопасности и управлению проектами</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Главная страница -->
+    <section id="home">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title animate-on-scroll">Привет, я <span>Сергей</span></h1>
+                <h2 class="hero-subtitle animate-on-scroll">Также известный под прозвищем <span>Барон</span></h2>
+                <p class="hero-subtitle animate-on-scroll">Специалист по борьбе с мошенничеством имеющий навыки информационной безопасности, также эксперт в управлении проектами с опытом в IT стартапах</p>
+                <div class="hero-btns animate-on-scroll">
+                    <a href="#about" class="btn">Узнать больше</a>
+                    <a href="#contact" class="btn btn-secondary">Связаться</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1581094794329-16b125e1b415?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Сергей Барон">
+            </div>
+        </div>
+    </section>
+
+    <!-- Специализация -->
+    <section id="specialization" class="section">
+        <div class="container">
+            <h2 class="section-title animate-on-scroll">Моя специализация</h2>
+            <div class="specialization-container">
+                <div class="spec-card animate-on-scroll">
+                    <div class="spec-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="spec-title">Специалист по противодействию мошенничеству</h3>
+                    <p class="spec-desc">Со знанием информационной безопасности и опытом выявления и предотвращения мошеннических схем в сети.</p>
+                </div>
+                
+                <div class="spec-card animate-on-scroll">
+                    <div class="spec-icon">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <h3 class="spec-title">Проект Менеджер</h3>
+                    <p class="spec-desc">Руководитель IT проектов с опытом управления командой, планирования ресурсов и достижения поставленных целей в установленные сроки.</p>
+                </div>
+                
+                <div class="spec-card animate-on-scroll">
+                    <div class="spec-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="spec-title">Комьюнити Менеджер</h3>
+                    <p class="spec-desc">Создание и управление сообществом, развитие коммуникации, модерация чатов и координация пользователей в проекте.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Обо мне (подробная страница) -->
+    <section id="about" class="section">
+        <div class="container">
+            <div class="about-section">
+                <div class="about-image animate-on-scroll">
+                    <img src="https://i.postimg.cc/J0Zff7LH/avabilyard.jpg" alt="Сергей Барон">
+                </div>
+                <div class="about-content">
+                    <h2 class="about-title animate-on-scroll">Обо <span>мне</span></h2>
+                    <p class="about-text animate-on-scroll">Меня зовут Сергей, также я известен под прозвищем Барон. Я специализируюсь на информационной безопасности, управлении проектами и сообществами.</p>
+                    <p class="about-text animate-on-scroll">Мой профессиональный путь начался в сфере посредничества между исполнителем (разработчиком/дизайнером) и заказчиком, где занимался продажами, составлял ТЗ, развивал компетенции в области социальной инженерии. Это дало мне глубокое понимание психологии взаимодействия и методов защиты от мошенников в сети.</p>
+                    <p class="about-text animate-on-scroll">Позже я перешел в IT-сферу как руководитель, где работал как в стартапах, так и в собственных проектах, занимая позиции продакт-менеджера и руководителя проектов. Мои навыки включают управление командой, планирование ресурсов и достижение поставленных целей.</p>
+                    <a href="#contact" class="btn animate-on-scroll">Связаться со мной</a>
+                </div>
+            </div>
+            
+            <h2 class="section-title animate-on-scroll">Ключевые навыки и опыт</h2>
+            <div class="skills-container">
+                <div class="skill-category animate-on-scroll">
+                    <h3 class="skill-title"><i class="fas fa-university"></i> Банковский опыт</h3>
+                    <ul class="skill-list">
+                        <li>Продажи банковских продуктов</li>
+                        <li>Работа с клиентской базой</li>
+                        <li>Отработка возражений</li>
+                    </ul>
+                </div>
+                
+                <div class="skill-category animate-on-scroll">
+                    <h3 class="skill-title"><i class="fas fa-laptop-code"></i> IT и стартапы</h3>
+                    <ul class="skill-list">
+                        <li>Управление IT проектами</li>
+                        <li>Продакт-менеджмент</li>
+                        <li>Разработка стратегии продукта (составление ROAD MAP)</li>
+                        <li>Запуск MVP</li>
+                    </ul>
+                </div>
+                
+                <div class="skill-category animate-on-scroll">
+                    <h3 class="skill-title"><i class="fas fa-comments"></i> Коммуникации</h3>
+                    <ul class="skill-list">
+                        <li>Грамотная письменная и устная речь</li>
+                        <li>Публичные выступления</li>
+                        <li>Управление сообществом</li>
+                        <li>Разрешение конфликтов в сети</li>
+                    </ul>
+                </div>
+                
+                <div class="skill-category animate-on-scroll">
+                    <h3 class="skill-title"><i class="fas fa-shield-alt"></i> Безопасность</h3>
+                    <ul class="skill-list">
+                        <li>Информационная безопасность</li>
+                        <li>Противодействие мошенничеству</li>
+                        <li>Социальная инженерия</li>
+                        <li>Анализ угроз</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Опыт работы -->
+    <section id="experience" class="section" style="background-color: var(--secondary);">
+        <div class="container">
+            <h2 class="section-title animate-on-scroll">Профессиональный опыт</h2>
+            <div class="timeline">
+                <div class="timeline-item animate-on-scroll">
+                    <div class="timeline-content">
+                        <div class="timeline-year">Май 2024</div>
+                        <h3 class="timeline-title">Telegram, Блокчейн TON (The Open Network)</h3>
+                        <p class="timeline-desc">Активный участник и эксперт сообщества под псевдонимом Барон. Участие в развитии экосистемы, консультирование проектов.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item animate-on-scroll">
+                    <div class="timeline-content">
+                        <div class="timeline-year">Июнь 2024</div>
+                        <h3 class="timeline-title">Продакт-менеджер</h3>
+                        <p class="timeline-desc">Разработка и запуск IT продуктов в стартапах. Формирование требований, управление бэклогом, взаимодействие с командами разработки.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item animate-on-scroll">
+                    <div class="timeline-content">
+                        <div class="timeline-year">Июль 2024</div>
+                        <h3 class="timeline-title">Руководитель IT проектов</h3>
+                        <p class="timeline-desc">Управление командой разработчиков, дизайнеров, также составление ROAD MAP (Дорожной карты).</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item animate-on-scroll">
+                    <div class="timeline-content">
+                        <div class="timeline-year">2024-2025</div>
+                        <h3 class="timeline-title">Информационная Безопасность</h3>
+                        <p class="timeline-desc">Изучение социальной инженерии с целью предотвращения мошеннических схем, также анализ угроз информационной безопасности.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item animate-on-scroll">
+                    <div class="timeline-content">
+                        <div class="timeline-year">Весна 2025</div>
+                        <h3 class="timeline-title">Банковский специалист</h3>
+                        <p class="timeline-desc">Работа с клиентами, продажи банковских продуктов, консультирование по финансовым вопросам.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Контакты -->
+    <section id="contact" class="section">
+        <div class="container">
+            <h2 class="section-title animate-on-scroll">Связаться со мной</h2>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <div class="contact-item animate-on-scroll">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="contact-text">
+                            <h3>Локация</h3>
+                            <p>Санкт-Петербург, Россия</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item animate-on-scroll">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-text">
+                            <h3>Email</h3>
+                            <p>baronstoc@gmail.com</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item animate-on-scroll">
+                        <div class="contact-icon">
+                            <i class="fab fa-telegram"></i>
+                        </div>
+                        <div class="contact-text">
+                            <h3>Telegram</h3>
+                            <p>@baronstoc</p>
+                            <div class="social-links">
+                                <a href="#"><i class="fab fa-telegram"></i></a>
+                                <a href="#"><i class="fab fa-github"></i></a>
+                                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="#"><i class="fab fa-twitter"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-form animate-on-scroll">
+                    <form>
+                        <div class="form-group">
+                            <label for="name">Ваше имя</label>
+                            <input type="text" id="name" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subject">Тема</label>
+                            <input type="text" id="subject" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">Сообщение</label>
+                            <textarea id="message" class="form-control" required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn">Отправить сообщение</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Футер -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">Барон</div>
+                <p class="copyright">© 2025 Сергей (Барон). Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
